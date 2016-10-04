@@ -19,6 +19,7 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+var storage = [];
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -29,11 +30,30 @@ var requestHandler = function(request, response) {
   //
   // Documentation for both request and response can be found in the HTTP section at
   // http://nodejs.org/documentation/api/
-
+  var statusCode = 404;
+  var finalResponse;
+  var stub = {results: [ {name: 'Robin', age: 27} ] };
+  storage.push(stub);
   // Do some basic logging.
 
-  console.log('request', request);
-  console.log('response', response);
+  if (request.method === 'POST') {
+    statusCode = 201;
+    var body = [];
+    request.on('data', function(chunk) {
+      body.push(chunk);
+    }).on('end', function() {
+      body = Buffer.concat(body).toString();
+      storage.push(body);
+      finalResponse = {results: storage};
+    });
+  } else if (request.method === 'GET') {
+    statusCode = 200;
+    finalResponse = {results: storage};
+
+  }
+
+  //console.log('request', request);
+  //console.log('response', response);
   //
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
@@ -41,7 +61,7 @@ var requestHandler = function(request, response) {
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
 
   // The outgoing status.
-  var statusCode = 200;
+
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -63,7 +83,9 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!');
+
+
+  response.end(JSON.stringify(finalResponse));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
