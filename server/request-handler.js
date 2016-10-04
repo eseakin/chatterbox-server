@@ -32,24 +32,25 @@ var requestHandler = function(request, response) {
   // http://nodejs.org/documentation/api/
   var statusCode = 404;
   var finalResponse;
-  var stub = {results: [ {name: 'Robin', age: 27} ] };
-  storage.push(stub);
+  var stub = {name: 'Robin', age: 27};
+  // storage.push(stub);
   // Do some basic logging.
-
-  if (request.method === 'POST') {
-    statusCode = 201;
-    var body = [];
-    request.on('data', function(chunk) {
-      body.push(chunk);
-    }).on('end', function() {
-      body = Buffer.concat(body).toString();
-      storage.push(body);
+  if (request.url === '/classes/messages' || request.url === '/classes/room') {
+    if (request.method === 'POST') {
+      statusCode = 201;
+      var body = [];
+      request.on('data', function(chunk) {
+        body.push(chunk);
+      }).on('end', function() {
+        body = JSON.parse(Buffer.concat(body));
+        storage.push(body);
+        finalResponse = {results: storage};
+      });
+    } else if (request.method === 'GET') {
+      statusCode = 200;
       finalResponse = {results: storage};
-    });
-  } else if (request.method === 'GET') {
-    statusCode = 200;
-    finalResponse = {results: storage};
 
+    }
   }
 
   //console.log('request', request);
