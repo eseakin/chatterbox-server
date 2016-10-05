@@ -6,7 +6,7 @@ body {
 }
 
 #main, #chats {
-    width: 500px;
+    width: 100;
     margin: auto;
     text-align: left;
     background: white;
@@ -87,3 +87,77 @@ form input[type=text] {
     color: #fff;
     background-color: #0090da;
 }
+
+.chatbox{
+    background-color: red;
+    color: white;
+    width: 300px; 
+    height: 300px; 
+    padding: .5em;
+    margin: .5em;
+    position: absolute;
+    /*overflow: scroll;*/
+    border-radius: 2em 2em 2em 0;  
+    opacity: .95; 
+}
+
+.newRoomButton {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor:pointer;
+
+}
+.sendButton {
+    float:right;
+    width:50px;
+    height:30px;
+    text-align:center;
+    display:inline-block;
+    padding-top:7px;
+    /*border: 1px solid pink;*/
+    cursor:pointer;
+    border-radius: 0 0 2em 0;
+    margin-top:8px;
+}
+.messageType{
+    /*border: 1px solid blue;*/
+    display:inline-block;
+    height: 25px;
+    width: 240px;
+    overflow: auto;
+    border-radius:0 0 0 0;
+    margin-top:10px;
+}
+.messages{
+    overflow:scroll;
+    margin-top: 25px;
+    width:300px;
+    height:235px;
+    border-top: 2px solid grey;
+    /*border-right: 5px solid green;*/
+}
+.closeWindow {
+    position:absolute;
+    left:290px;
+    cursor: pointer;
+    color:#fff;
+}
+.roomname {
+    position:absolute;
+    left:20px;
+    color:#fff;
+}
+textarea{
+    resize:none;
+}
+
+.friend {
+    font-weight: bold;
+}
+

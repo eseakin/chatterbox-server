@@ -11,6 +11,8 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var fs = require('fs');
+
 
 var defaultCorsHeaders = {
   'access-control-allow-origin': '*',
@@ -19,9 +21,35 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
-var storage = [];
+var stub1 = {
+  "url": "/classes/messages", 
+  "type": "POST", 
+  "content-type": "application/json",
+  "objectId": "0",
+  "data": {
+    "username": "jack", 
+    "roomname": "test", 
+    "text": "hello"
+  }
+};
+
+var stub2 = {
+  "url": "/classes/messages", 
+  "type": "POST", 
+  "content-type": "application/json",
+  "objectId": "1",
+  "data": {
+    "username": "joe", 
+    "roomname": "room", 
+    "text": "womp womp"
+  }
+};
+
+var messageStorage = [];
+var roomStorage = {'lobby': []};
 
 var requestHandler = function(request, response) {
+  console.log('Serving request type ' + request.method + ' for url ' + request.url);
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -30,27 +58,72 @@ var requestHandler = function(request, response) {
   //
   // Documentation for both request and response can be found in the HTTP section at
   // http://nodejs.org/documentation/api/
-  var statusCode = 404;
-  var finalResponse;
-  var stub = {name: 'Robin', age: 27};
-  // storage.push(stub);
+  var statusCode;
+  // var stub = {name: 'Robin', age: 27};
+  var headers = defaultCorsHeaders;
+  headers['Content-Type'] = 'application/json';
+  // messageStorage.push(stub);
   // Do some basic logging.
-  if (request.url === '/classes/messages' || request.url === '/classes/room') {
-    if (request.method === 'POST') {
-      statusCode = 201;
-      var body = [];
-      request.on('data', function(chunk) {
-        body.push(chunk);
-      }).on('end', function() {
-        body = JSON.parse(Buffer.concat(body));
-        storage.push(body);
-        finalResponse = {results: storage};
-      });
-    } else if (request.method === 'GET') {
-      statusCode = 200;
-      finalResponse = {results: storage};
+  // if (request.url !== '/classes/messages') {
+  //   statusCode = 404;
+  //   response.writeHead(statusCode, headers);
+  //   response.end('404 not found!!');
+  //   return;
+  // }
 
-    }
+
+// {
+//   "url": "/classes/messages", 
+//   "type": "POST", 
+//   "data": {
+//     "username": "user", 
+//     "roomname": "room", 
+//     "text": "message text"
+//   }
+// }
+
+  if (request.method === 'POST') {
+    statusCode = 201;
+    var body = [];
+    request.on('data', function(chunk) {
+      body.push(chunk);
+    });
+    request.on('end', function() {
+      // console.log('preparse', body);
+      body = JSON.parse(body.toString());
+      console.log('server side posting', body);
+
+      if (!body.roomname) {
+        body.roomname = 'lobby';
+      }
+      if (!roomStorage[body.roomname]) {
+        roomStorage[body.roomname] = [];
+        roomStorage[body.roomname].push(body);
+      }
+
+
+      var wrapper = {
+        url: '/classes/messages',
+        type: 'POST',
+        'content-type': 'application/json',
+        objectId: messageStorage.length,
+        data: body
+      };
+
+      messageStorage.unshift(wrapper);
+
+      // console.log(JSON.stringify(messageStorage), statusCode);
+
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(messageStorage));
+    });
+  } else if (request.method === 'GET' || request.method === 'OPTIONS') {
+    statusCode = 200;
+    console.log('server side get');
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify({results: messageStorage}));
+  } else {
+    console.log('Not post or get or options');
   }
 
   //console.log('request', request);
@@ -59,34 +132,18 @@ var requestHandler = function(request, response) {
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
+
 
   // The outgoing status.
 
 
   // See the note below about CORS headers.
-  var headers = defaultCorsHeaders;
 
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'application/json';
 
-  // .writeHead() writes to the request line and headers of the response,
-  // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
-
-  // Make sure to always call response.end() - Node may not send
-  // anything back to the client until you do. The string you pass to
-  // response.end() will be the body of the response - i.e. what shows
-  // up in the browser.
-  //
-  // Calling .end "flushes" the response's internal buffer, forcing
-  // node to actually send all the data over to the client.
-
-
-  response.end(JSON.stringify(finalResponse));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -101,4 +158,3 @@ var requestHandler = function(request, response) {
 
 
 exports.requestHandler = requestHandler;
-exports.defaultCorsHeaders = defaultCorsHeaders;

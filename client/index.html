@@ -14,34 +14,36 @@
         if (newSearch !== '' & newSearch !== '?') {
           newSearch += '&';
         }
-        newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
+        var user = prompt(('What is your name?') || 'anonymous');
+        newSearch += 'username=' + user;
         window.location.search = newSearch;
       }
     </script>
-    <!-- your scripts -->
+   
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
   </head>
   <body>
     <div id="main">
       <h1>chatterbox</h1>
-      <!-- Your HTML goes here! -->
+      <button class='newRoomButton'>Add New Room!</button>
+      <script>
 
-      <div class="spinner"><img src="images/spiffygif_46x46.gif"></div>
-      <div id="rooms">
-        Room:
-        <select id="roomSelect">
-        </select>
-      </div>
-      <form action="#" id="send" method="post">
-        <input type="text" name="message" id="message"/>
-        <input type="submit" name="submit" class="submit"/>
-      </form>    </div>
+      </script>
+      <!-- <div class='chatbox'><p>hi this is a draggable box</p></div> -->
+      <!-- Your HTML goes here! -->
+    </div>
     <div id="chats"></div>
 
-    <script>
-      $(function(){
-        app.init()
-      });
-    </script>  </body>
+  </body>
 </html>
+
+
+
+
+
+
+
+
