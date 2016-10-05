@@ -108,11 +108,11 @@ class App {
 
       var example = 'abcdefghijklmnopqrstuvwxyz0123456789';
       // if (!ele.username || example.indexOf(ele.username[0].toLowerCase()) === -1) {
-        console.log('username', ele.username);
+      console.log('username', ele.username);
       if (!ele.username) {
         ele.username = 'anonymous';
       }
-        console.log('roomname', ele.roomname);
+      console.log('roomname', ele.roomname);
       if (!ele.roomname || example.indexOf(ele.roomname[0].toLowerCase()) === -1 || ele.roomname === null) {
         ele.roomname = 'default';
       }
@@ -122,17 +122,17 @@ class App {
 
       this.renderRoom(ele.roomname);
       
-      $('#'+ele.roomname + ' .messages').append('<p><span class="username" data-username=\"' + ele.username + '\" /><span class="message" /></p>');
+      $('#' + ele.roomname + ' .messages').append('<p><span class="username" data-username=\"' + ele.username + '\" /><span class="message" /></p>');
       // $('#'+ele.roomname + ' .messages .username').last().text(ele.username);
 
       if (this.friends.indexOf(ele.username) !== -1) {
-        $('#'+ele.roomname + ' .messages .username').last().text(ele.username);
-        $('#'+ele.roomname + ' .messages .username').last().addClass('friend')
+        $('#' + ele.roomname + ' .messages .username').last().text(ele.username);
+        $('#' + ele.roomname + ' .messages .username').last().addClass('friend');
       } else {
-        $('#'+ele.roomname + ' .messages .username').last().text(ele.username);
+        $('#' + ele.roomname + ' .messages .username').last().text(ele.username);
       }
 
-      $('#'+ele.roomname + ' .messages  .message').last().text(': ' + ele.text);
+      $('#' + ele.roomname + ' .messages  .message').last().text(': ' + ele.text);
 
       // console.log('message rendered to ', ele.roomname)
     }
@@ -149,17 +149,17 @@ class App {
     // roomname = roomname.replace(/"/g, '\\\"');
 
     var $roomname = document.getElementById(roomname);
-    console.log('$roomname', $roomname)
+    console.log('$roomname', $roomname);
     
     if (document.getElementById(roomname)) {
-      console.log('room exists')
+      console.log('room exists');
       if ($($roomname).is(':hidden')) {
         $($roomname).slideDown();
       }
       return;
     }
 
-    console.log('room does not exist, creating')
+    console.log('room does not exist, creating');
     if (document.getElementById(roomname)) {
       alert('Room already exists');
       var roomname = prompt('Name Your Room');
@@ -167,17 +167,17 @@ class App {
       return;
     }
 
-    $('#main').append('<div class="chatbox" id=\"' + roomname + '\"></div>');
-    $('#'+roomname).append('<div class="closeWindow">X</div>');
-    $('#'+roomname).append('<div class="roomname"></div>');
-    $('#'+roomname + ' .roomname').text(roomname);
-    $('#'+roomname).append('<div class="messages"></div>');
-    $('#'+roomname).append('<textarea class="messageType"></textarea>');
-    $('#'+roomname).append('<div class="sendButton">Send</div>');
+    $('#main').append('<div class="chatbox" style="display:none" id=\"' + roomname + '\"></div>');
+    $('#' + roomname).append('<div class="closeWindow">X</div>');
+    $('#' + roomname).append('<div class="roomname"></div>');
+    $('#' + roomname + ' .roomname').text(roomname);
+    $('#' + roomname).append('<div class="messages"></div>');
+    $('#' + roomname).append('<textarea class="messageType"></textarea>');
+    $('#' + roomname).append('<div class="sendButton">Send</div>');
 
-    $('#'+roomname).css('top', this.randomNum(0, window.innerHeight - 300) + 'px');
-    $('#'+roomname).css('left', this.randomNum(0, window.innerWidth - 300) + 'px');
-    $('#'+roomname).css('background-color', 'rgb(' + this.randomNum(0, 200) + ',' + this.randomNum(0, 200) + ',' + this.randomNum(0, 200) + ')');
+    $('#' + roomname).css('top', this.randomNum(0, window.innerHeight - 300) + 'px');
+    $('#' + roomname).css('left', this.randomNum(0, window.innerWidth - 300) + 'px');
+    $('#' + roomname).css('background-color', 'rgb(' + this.randomNum(0, 200) + ',' + this.randomNum(0, 200) + ',' + this.randomNum(0, 200) + ')');
 
     
     
@@ -190,32 +190,32 @@ class App {
     });
 
     //friends list click handler
-    $('#'+roomname).on('click', '.username', (event) => {
+    $('#' + roomname).on('click', '.username', (event) => {
       // console.log($(event.target));
       var friendIndex = this.friends.indexOf($(event.target).text());
       var friend = $(event.target).text();
-      console.log('my friend is ', friend)
+      console.log('my friend is ', friend);
       if (friendIndex === -1) {
         this.friends.push(friend);
       } else {
         this.friends.splice(friendIndex, 1);
       }
 
-      $('.username[data-username=\"'+friend+'\"]').each(function(){
+      $('.username[data-username=\"' + friend + '\"]').each(function() {
         $(this).toggleClass('friend');
       });
 
       console.log('friends toggled');
     });
     
-    $('#'+roomname).on('click', '.sendButton',(event) => {
+    $('#' + roomname).on('click', '.sendButton', (event) => {
       var username = '';
 
       var string = window.location.search;
 
       var userIndex = string.indexOf('username=');
-      this.username = string.slice(userIndex + 9)
-      console.log('new user', this.username)
+      this.username = string.slice(userIndex + 9);
+      console.log('new user', this.username);
 
 
 
@@ -238,6 +238,7 @@ class App {
     });
     console.log('renderRoom');
 
+    $('#' + roomname).slideDown();
     // if(this.messages.results)
   }
 

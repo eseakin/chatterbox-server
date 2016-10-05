@@ -83,10 +83,12 @@ form input[type=text] {
     padding: 10px;
 }
 
+
 .friend {
     color: #fff;
     background-color: #0090da;
 }
+
 
 .chatbox{
     background-color: red;

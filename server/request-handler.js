@@ -21,30 +21,6 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
-var stub1 = {
-  "url": "/classes/messages", 
-  "type": "POST", 
-  "content-type": "application/json",
-  "objectId": "0",
-  "data": {
-    "username": "jack", 
-    "roomname": "test", 
-    "text": "hello"
-  }
-};
-
-var stub2 = {
-  "url": "/classes/messages", 
-  "type": "POST", 
-  "content-type": "application/json",
-  "objectId": "1",
-  "data": {
-    "username": "joe", 
-    "roomname": "room", 
-    "text": "womp womp"
-  }
-};
-
 var messageStorage = [];
 var roomStorage = {'lobby': []};
 
@@ -64,12 +40,12 @@ var requestHandler = function(request, response) {
   headers['Content-Type'] = 'application/json';
   // messageStorage.push(stub);
   // Do some basic logging.
-  // if (request.url !== '/classes/messages') {
-  //   statusCode = 404;
-  //   response.writeHead(statusCode, headers);
-  //   response.end('404 not found!!');
-  //   return;
-  // }
+  if (request.url !== '/classes/messages') {
+    statusCode = 404;
+    response.writeHead(statusCode, headers);
+    response.end('404 not found!!');
+    return;
+  }
 
 
 // {
@@ -105,6 +81,7 @@ var requestHandler = function(request, response) {
       var wrapper = {
         url: '/classes/messages',
         type: 'POST',
+        createdAt: new Date(),
         'content-type': 'application/json',
         objectId: messageStorage.length,
         data: body
